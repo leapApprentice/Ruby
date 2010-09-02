@@ -9,6 +9,9 @@ Actually, it should probably use cookies and Rails instead of text files.
 
 Modifications: Change the file contents instead of deleting and recreating the file. Add support for multiple activities. Let the user name the activity.
 Add a reset.
+
+Problems: With this version, the first time the program is used, it doesn't add properly. 
+		  With all versions, it tries to access the file before it actually exists.
 =end
 
 
@@ -20,10 +23,7 @@ hours = gets.chomp
 #specifies a filename for the text file that will store persistent numbers of hours
 filename = 'hrsfile.txt'
 
-if File.file? filename
-	#loads the text file if it exists
-	#hrsfile = File.open("hrsfile.txt", "r+")
-else
+if not File.file? filename
 	#creates the file if it doesn't already exist and adds 0 to the first line
 	hrsfile = File.new("hrsfile.txt", "w+")
 	hrsfile.puts("0")
@@ -42,7 +42,10 @@ hrsfile.close
 totalHours = String(Integer(hrsContents) + Integer(hours))
 
 #deletes the old file, makes a new one and saves hours to that file, adding the new hours to any existing hours
-File.delete("hrsfile.txt")
+#File.delete("hrsfile.txt")
+
+#This line should work without the delete, since w+ erases the file's content and writes new content
+#(http://snippets.dzone.com/posts/show/5051)
 hrsfile = File.new("hrsfile.txt", "w+")
 hrsfile.puts totalHours
 
